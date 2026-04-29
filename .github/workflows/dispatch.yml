@@ -1,0 +1,26 @@
+name: Route JSON to Target Repos
+on:
+  push:
+    paths:
+      - 'json/*.json' # This "sensor" only trips when files in the /json folder change
+
+jobs:
+  route-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: python/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Dispatcher Script
+        env:
+          # You'll need to add your Personal Access Token to Repo Secrets
+          GH_PAT: ${{ secrets.GH_PAT }} 
+        run: python dispatcher.py # This is the script we talked about earlier
